@@ -1,38 +1,40 @@
-# WaR VS Planner - Worker version
+# WaR VS Planner - Worker version v4
 
-This version adds the requested changes:
+This update changes player handling and fixes the write flow design:
 
-- Player entry is the default tab.
-- Players choose a VS day and then see that day's activities.
-- Each player enters their own point value per activity, because values can differ by player.
-- Admin area can define activities per VS day and set default points.
-- Players can save and later edit with player name + simple 6-digit code.
-- Guild role removed.
-- Dashboard is protected using the same admin secret/password variable.
-- White/light theme only.
-- Mobile-first layout.
-- WaR branding and X-Clash-inspired visual direction.
+- Player entry now starts from an admin-created player dropdown.
+- Admin is the only one who can create player profiles.
+- Players set and manage their own 6-digit code.
+- Admin can see last login time.
+- Admin can reset a player's code.
+- Backend now includes a dedicated `players` table and safer JSON error responses.
 
-## Important database update
+## Why writes may have failed before
 
-Because submissions now store `player_pin` and the activity input structure changed, run the schema again on your D1 database.
+If reads worked but writes failed, the most likely cause was a schema mismatch after the app started sending new fields such as `player_pin` or later `player_id`. This version adds a proper `players` table and updated submission structure, so you must update the D1 schema. [web:143][web:145]
+
+## Required database update
+
+Run the updated schema against your D1 database:
 
 ```bash
 npx wrangler d1 execute xclash-vs-planner-db --file=schema.sql
 ```
 
-If your current `submissions` table already exists with the old structure, the quickest path is often:
+If you already have an older `submissions` table without `player_id`, the quickest clean path is usually:
 
 ```sql
 DROP TABLE submissions;
+DROP TABLE players;
 ```
 
 then rerun `schema.sql`.
 
-## Deploy
+## Deploy steps
 
-1. Replace your GitHub repo files with this version.
+1. Replace your repo with this updated version.
 2. Push to GitHub.
 3. Redeploy the Worker.
-4. Run the updated schema if needed.
-5. Keep using the same `ADMIN_SECRET` Worker variable.
+4. Run the updated schema.
+5. In Admin, create player profiles first.
+6. Players then set their own 6-digit code and save/edit entries.
