@@ -84,6 +84,8 @@ export default {
       }
 
       if (url.pathname === '/api/submissions' && request.method === 'GET') {
+        const secret = request.headers.get('x-admin-secret');
+        if (!env.ADMIN_SECRET || secret !== env.ADMIN_SECRET) return unauthorized();
         const { results } = await env.DB.prepare(`SELECT s.*, p.player_name, p.last_login_at FROM submissions s LEFT JOIN players p ON p.id = s.player_id ORDER BY s.created_at DESC`).all();
         return json(results);
       }
