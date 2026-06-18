@@ -134,6 +134,59 @@ function bindDashboard(){qs('unlockDashboardBtn').addEventListener('click',async
 function bindNav(){document.querySelectorAll('[data-view-btn]').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.viewBtn)))}
 function renderAll(){if(state.adminUnlocked){renderAdminPlayers();renderFormulaCards()}renderAnnouncement();if(state.dashboardUnlocked)renderDashboard()}
 function init(){renderSlots();bindNav();bindPlayerActions();bindAdmin();bindDashboard();loadInitialData()} init();
+
+const i18n={
+  en:{langLabel:'Language',playerEntry:'Player Entry',admin:'Admin',dashboard:'Dashboard',welcome:'Welcome to WaR. Let's play and enjoy the game',announcement:'WaR Announcement',choosePlayer:'Choose player',enterCode:'Enter or set code',enterVsDay:'Enter one VS day',choosePlayerDesc:'Select your character name from the list created by admin.',enterCodeDesc:'Use your 6-digit code to unlock your entry, or set a new one if you are a new player.',enterVsDayDesc:'Each character can have only one saved entry per VS day. Saving again updates that day.',playerEntryTitle:'Player entry',player:'Player',code:'6-digit code',setCode:'Set / update code',continue:'Continue',startLocked:'Start with player + 6-digit code. Once verified, the VS entry form will appear below.',choosePlayerCode:'Choose a player and enter the correct 6-digit code.',vsDay:'VS day',confidence:'Confidence',slots:'Available 4-hour server-time slots',vsPoints:'VS points',activities:'activities',itemsUsed:'Items used',pointsPerItem:'Points per 1 item',guaranteedOverride:'Guaranteed override',maximumOverride:'Maximum override',notes:'Notes',saveVsDay:'Save this VS day',reset:'Reset',liveEstimate:'Live estimate',helpfulNote:'Helpful note',adminArea:'Admin area',adminLocked:'Admin data stays hidden until the correct password is entered.',adminPassword:'Admin password',unlockAdmin:'Unlock admin',players:'Players',newPlayer:'New player name',status:'Status',createPlayer:'Create player',announcementBanner:'Announcement banner',announcementText:'Announcement text',saveAnnouncement:'Save announcement',clearAnnouncement:'Clear announcement',dayFormulas:'Day formulas',defineActivities:'Define activities and points per item for each VS day.',activity:'Activity',delete:'Delete',activityName:'Activity name',description:'Description',save:'Save',dashboardAccess:'Dashboard access',unlockDashboard:'Unlock dashboard',rankingMode:'Ranking mode',savedEntries:'Saved entries',guaranteed:'Guaranteed',maximum:'Maximum',coveredSlots:'Covered slots',bestPush:'Best push windows',readOnly:'Read-only union totals and player entries.'},
+  id:{langLabel:'Bahasa',playerEntry:'Entri Pemain',admin:'Admin',dashboard:'Dasbor',welcome:'Selamat datang di WaR. Ayo bermain dan menikmati game ini',announcement:'Pengumuman WaR',choosePlayer:'Pilih pemain',enterCode:'Masukkan atau atur kode',enterVsDay:'Masukkan satu hari VS',choosePlayerDesc:'Pilih nama karakter Anda dari daftar yang dibuat admin.',enterCodeDesc:'Gunakan kode 6 digit untuk membuka entri Anda, atau buat kode baru jika Anda pemain baru.',enterVsDayDesc:'Setiap karakter hanya dapat memiliki satu entri tersimpan per hari VS. Menyimpan lagi akan memperbarui hari itu.',playerEntryTitle:'Entri pemain',player:'Pemain',code:'Kode 6 digit',setCode:'Atur / perbarui kode',continue:'Lanjutkan',startLocked:'Mulai dengan pemain + kode 6 digit. Setelah terverifikasi, formulir entri VS akan muncul di bawah.',choosePlayerCode:'Pilih pemain dan masukkan kode 6 digit yang benar.',vsDay:'Hari VS',confidence:'Keyakinan',slots:'Slot waktu server 4 jam yang tersedia',vsPoints:'Poin VS',activities:'aktivitas',itemsUsed:'Jumlah item',pointsPerItem:'Poin per 1 item',guaranteedOverride:'Override jaminan',maximumOverride:'Override maksimum',notes:'Catatan',saveVsDay:'Simpan hari VS ini',reset:'Reset',liveEstimate:'Estimasi langsung',helpfulNote:'Catatan bantuan',adminArea:'Area admin',adminLocked:'Data admin tetap tersembunyi sampai kata sandi yang benar dimasukkan.',adminPassword:'Kata sandi admin',unlockAdmin:'Buka admin',players:'Pemain',newPlayer:'Nama pemain baru',status:'Status',createPlayer:'Buat pemain',announcementBanner:'Banner pengumuman',announcementText:'Teks pengumuman',saveAnnouncement:'Simpan pengumuman',clearAnnouncement:'Hapus pengumuman',dayFormulas:'Formula hari',defineActivities:'Tentukan aktivitas dan poin per item untuk tiap hari VS.',activity:'Aktivitas',delete:'Hapus',activityName:'Nama aktivitas',description:'Deskripsi',save:'Simpan',dashboardAccess:'Akses dasbor',unlockDashboard:'Buka dasbor',rankingMode:'Mode peringkat',savedEntries:'Entri tersimpan',guaranteed:'Jaminan',maximum:'Maksimum',coveredSlots:'Slot tercakup',bestPush:'Waktu push terbaik',readOnly:'Total union dan entri pemain hanya-baca.'}
+};
+state.playerLanguage='en';
+function t(k){return (i18n[state.playerLanguage]&&i18n[state.playerLanguage][k])||i18n.en[k]||k}
+function applyTranslations(){
+  document.querySelector('[data-view-btn="submit"]').textContent=t('playerEntry');
+  document.querySelector('[data-view-btn="formula"]').textContent=t('admin');
+  document.querySelector('[data-view-btn="dashboard"]').textContent=t('dashboard');
+  document.querySelector('.subtitle').textContent=t('welcome');
+  const annTitle=document.querySelector('#announcementBanner strong'); if(annTitle) annTitle.textContent=t('announcement');
+  const stepTitles=document.querySelectorAll('.step-title'); if(stepTitles[0]) stepTitles[0].textContent='1. '+t('choosePlayer'); if(stepTitles[1]) stepTitles[1].textContent='2. '+t('enterCode'); if(stepTitles[2]) stepTitles[2].textContent='3. '+t('enterVsDay');
+  const stepCards=document.querySelectorAll('.step-card .tiny'); if(stepCards[0]) stepCards[0].textContent=t('choosePlayerDesc'); if(stepCards[1]) stepCards[1].textContent=t('enterCodeDesc'); if(stepCards[2]) stepCards[2].textContent=t('enterVsDayDesc');
+  document.querySelector('#submitView h2').textContent=t('playerEntryTitle');
+  document.querySelector('label[for="playerSelect"]').textContent=t('player');
+  document.querySelector('label[for="playerPin"]').textContent=t('code');
+  qs('setPinBtn').textContent=t('setCode'); qs('loadProfileBtn').textContent=t('continue');
+  qs('lockedMessage').textContent=t('startLocked'); qs('lookupStatus').textContent=t('choosePlayerCode');
+  document.querySelector('label[for="vsDay"]').textContent=t('vsDay'); document.querySelector('label[for="confidence"]').textContent=t('confidence');
+  document.querySelector('#submissionForm .field label').textContent=document.querySelector('#submissionForm .field label').textContent;
+  const slotLabel=document.querySelector('#submissionForm .field label[for]')
+  const slotTitle=document.querySelectorAll('#submissionForm .field > label')[2]; if(slotTitle) slotTitle.textContent=t('slots');
+  document.querySelector('#playerEntryFields h3').textContent=t('vsPoints');
+  const saveBtn=qs('saveEntryBtn'); if(saveBtn&&!saveBtn.disabled) saveBtn.textContent=t('saveVsDay');
+  qs('resetFormBtn').textContent=t('reset');
+  const liveHeads=document.querySelectorAll('#playerEntryFields .card h3'); if(liveHeads[1]) liveHeads[1].textContent=t('liveEstimate'); if(liveHeads[2]) liveHeads[2].textContent=t('helpfulNote');
+  const adminHead=document.querySelector('#adminGate h2'); if(adminHead) adminHead.textContent=t('adminArea');
+  const adminMuted=document.querySelector('#adminGate .muted'); if(adminMuted) adminMuted.textContent=t('adminLocked');
+  const adminPass=document.querySelector('label[for="adminSecret"]'); if(adminPass) adminPass.textContent=t('adminPassword');
+  const unlockAdmin=qs('unlockAdminBtn'); if(unlockAdmin&&!unlockAdmin.disabled) unlockAdmin.textContent=t('unlockAdmin');
+  const dashHead=document.querySelector('#dashboardGate h2'); if(dashHead) dashHead.textContent=t('dashboardAccess');
+  const dashPass=document.querySelector('label[for="dashboardPassword"]'); if(dashPass) dashPass.textContent=t('adminPassword');
+  const dashBtn=qs('unlockDashboardBtn'); if(dashBtn&&!dashBtn.disabled) dashBtn.textContent=t('unlockDashboard');
+}
+function ensureLanguageControl(){
+  if(qs('languageSelect')) return;
+  const wrap=document.createElement('div'); wrap.className='field'; wrap.style.minWidth='180px';
+  wrap.innerHTML=`<label for="languageSelect">${t('langLabel')}</label><select id="languageSelect"><option value="en">English</option><option value="id">Bahasa Indonesia</option></select>`;
+  document.querySelector('.brand').appendChild(wrap);
+  qs('languageSelect').value=state.playerLanguage;
+  qs('languageSelect').addEventListener('change',()=>{state.playerLanguage=qs('languageSelect').value; applyTranslations(); showFeedback('playerActionFeedback','Language updated.');});
+}
+const origPopulatePlayerSelect=populatePlayerSelect;
+populatePlayerSelect=function(){origPopulatePlayerSelect(); ensureLanguageControl(); applyTranslations();}
+const origRenderPlayerActivities=renderPlayerActivities;
+renderPlayerActivities=function(values={}){origRenderPlayerActivities(values); document.querySelectorAll('[data-qty]').forEach(el=>{const lbl=el.closest('.field')?.querySelector('label'); if(lbl) lbl.textContent=t('itemsUsed')}); document.querySelectorAll('[data-points]').forEach(el=>{const lbl=el.closest('.field')?.querySelector('label'); if(lbl) lbl.textContent=t('pointsPerItem')}); const badge=qs('activityCountBadge'); if(badge) badge.textContent=`${badge.textContent.split(' ')[0]} ${t('activities')}`; applyTranslations();}
+const origRenderFormulaCards=renderFormulaCards;
+renderFormulaCards=function(){origRenderFormulaCards(); document.querySelectorAll('[data-delete-activity]').forEach(btn=>btn.textContent=t('delete')); document.querySelectorAll('[data-add-activity]').forEach(btn=>btn.textContent=t('activity')+' +'); document.querySelectorAll('[data-save-formula]').forEach(btn=>btn.textContent=t('save')+' '+btn.textContent.replace(/^Save\s+/,'').replace(/^Simpan\s+/,'')); document.querySelectorAll('[data-admin-label]').forEach(el=>{const lbl=el.closest('.field')?.querySelector('label'); if(lbl) lbl.textContent=t('activityName')}); document.querySelectorAll('[data-admin-points]').forEach(el=>{const lbl=el.closest('.field')?.querySelector('label'); if(lbl) lbl.textContent=t('pointsPerItem')}); applyTranslations();}
+const origLoadInitialData=loadInitialData;
+loadInitialData=async function(){await origLoadInitialData(); ensureLanguageControl(); applyTranslations();}
+
 </script>
 </body>
 </html>
