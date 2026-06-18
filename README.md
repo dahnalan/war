@@ -38,3 +38,11 @@ then rerun `schema.sql`.
 4. Run the updated schema.
 5. In Admin, create player profiles first.
 6. Players then set their own 6-digit code and save/edit entries.
+
+
+## New in v5
+
+- Player data stays locked until the correct 6-digit code is entered for the selected player.
+- Admin announcement banner appears at the top of the home page.
+- Desktop slot layout was adjusted so time labels align correctly and do not overflow awkwardly.
+- New `app_settings` table stores the announcement banner.

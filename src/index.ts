@@ -10,6 +10,7 @@ type SubmissionBody = { id: string; playerId: string; playerName: string; player
 
 type PlayerBody = { id?: string; playerName: string; status?: string };
 type PinBody = { playerId: string; pin: string };
+type AnnouncementBody = { message?: string };
 
 const json = (data: unknown, init: ResponseInit = {}) => Response.json(data, { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...(init.headers || {}) }, ...init });
 const unauthorized = () => json({ error: 'Unauthorized.' }, { status: 401 });
@@ -19,6 +20,19 @@ export default {
     const url = new URL(request.url);
 
     try {
+      if (url.pathname === '/api/announcement' && request.method === 'GET') {
+        const row = await env.DB.prepare(`SELECT message FROM app_settings WHERE key = 'announcement'`).first<any>();
+        return json({ message: row?.message || '' });
+      }
+
+      if (url.pathname === '/api/announcement' && request.method === 'POST') {
+        const secret = request.headers.get('x-admin-secret');
+        if (!env.ADMIN_SECRET || secret !== env.ADMIN_SECRET) return unauthorized();
+        const body = (await request.json()) as AnnouncementBody;
+        await env.DB.prepare(`INSERT INTO app_settings (key, message, updated_at) VALUES ('announcement', ?, ?) ON CONFLICT(key) DO UPDATE SET message = excluded.message, updated_at = excluded.updated_at`).bind(body?.message || '', new Date().toISOString()).run();
+        return json({ ok: true });
+      }
+
       if (url.pathname === '/api/dashboard-auth' && request.method === 'POST') {
         const body = await request.json<{ password?: string }>();
         if (!env.ADMIN_SECRET || body?.password !== env.ADMIN_SECRET) return json({ error: 'Wrong password.' }, { status: 401 });
