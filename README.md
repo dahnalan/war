@@ -1,24 +1,37 @@
-# WaR VS Planner - Worker version v7
+# xclash-worker-project-16
 
-This version includes these updates:
+This build is the safe follow-up from the working v15 baseline.
 
-- `wrangler.toml` now includes the D1 database ID: `1f58e8e9-5f79-4fde-aa3e-ed770db76c46`.
-- Only one VS entry is allowed per player per VS day. Saving again updates that day's existing record.
-- Player entry is simplified into a guided flow: choose player, enter/set 6-digit code, then choose VS day, time slots, and VS points.
-- The player screen is now less complex and more step-driven.
+Included changes:
+- Admin can delete activities per VS day.
+- Admin no longer sees or edits technical activity keys.
+- Category is removed from the admin UI.
+- Activities are defined by label + points per 1 item.
+- Save/update feedback is added for player save, player code save, player create, announcement save/clear, formula save, admin unlock, and dashboard unlock.
 
-## Required database note
+## Database commands
 
-Because this version adds a `UNIQUE(player_id, vs_day)` rule, your existing `submissions` table may need to be recreated if it was built from an older schema.
+This version does not require a full database drop.
 
-Recommended clean approach if you are still iterating:
-
-```sql
-DROP TABLE submissions;
-```
-
-Then rerun:
+Run the schema again to ensure tables exist:
 
 ```bash
 npx wrangler d1 execute xclash-vs-planner-db --file=schema.sql
+```
+
+If you want to fully reset only the VS day definitions so you can re-enter them cleanly in the new simpler format:
+
+```bash
+npx wrangler d1 execute xclash-vs-planner-db --command "DELETE FROM day_formulas;"
+```
+
+Then either re-enter the formulas in the Admin page, or seed them again if you have a seed script.
+
+If you decide you want a total reset of all stored app data:
+
+```bash
+npx wrangler d1 execute xclash-vs-planner-db --command "DELETE FROM submissions;"
+npx wrangler d1 execute xclash-vs-planner-db --command "DELETE FROM players;"
+npx wrangler d1 execute xclash-vs-planner-db --command "DELETE FROM day_formulas;"
+npx wrangler d1 execute xclash-vs-planner-db --command "DELETE FROM app_settings;"
 ```
