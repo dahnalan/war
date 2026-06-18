@@ -1,12 +1,11 @@
 CREATE TABLE IF NOT EXISTS submissions (
   id TEXT PRIMARY KEY,
   player_name TEXT NOT NULL,
-  guild_role TEXT,
+  player_pin TEXT NOT NULL,
   vs_day TEXT NOT NULL,
-  spend_profile TEXT NOT NULL,
   confidence TEXT NOT NULL,
-  guaranteed_points INTEGER NOT NULL,
-  maximum_points INTEGER NOT NULL,
+  guaranteed_points REAL NOT NULL,
+  maximum_points REAL NOT NULL,
   notes TEXT,
   slots_json TEXT NOT NULL,
   inputs_json TEXT NOT NULL,
@@ -14,6 +13,7 @@ CREATE TABLE IF NOT EXISTS submissions (
 );
 
 CREATE INDEX IF NOT EXISTS idx_submissions_day ON submissions(vs_day);
+CREATE INDEX IF NOT EXISTS idx_submissions_player ON submissions(player_name);
 CREATE INDEX IF NOT EXISTS idx_submissions_created_at ON submissions(created_at DESC);
 
 CREATE TABLE IF NOT EXISTS day_formulas (
