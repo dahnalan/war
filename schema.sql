@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS submissions (
   slots_json TEXT NOT NULL,
   inputs_json TEXT NOT NULL,
   created_at TEXT NOT NULL,
-  FOREIGN KEY (player_id) REFERENCES players(id)
+  FOREIGN KEY (player_id) REFERENCES players(id),
+  UNIQUE(player_id, vs_day)
 );
 
 CREATE INDEX IF NOT EXISTS idx_submissions_day ON submissions(vs_day);
@@ -33,7 +34,6 @@ CREATE TABLE IF NOT EXISTS day_formulas (
   fields_json TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS app_settings (
   key TEXT PRIMARY KEY,

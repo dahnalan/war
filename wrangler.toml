@@ -1,12 +1,12 @@
-name = "xclash-vs-planner"
+name = "war-vs-planner"
 main = "src/index.ts"
 compatibility_date = "2026-06-18"
-
-[assets]
-directory = "./public"
-binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "xclash-vs-planner-db"
 database_id = "1f58e8e9-5f79-4fde-aa3e-ed770db76c46"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
