@@ -1,4 +1,4 @@
-name = "war-vs-planner"
+name = "war"
 main = "src/index.ts"
 compatibility_date = "2026-06-18"
 
